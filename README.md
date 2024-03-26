@@ -12,7 +12,7 @@ Dark-mode and Light-mode are available. Select the better one on the right-click
 
 Basktray's credit will appear when you double-click the icon!
 
-(Adding icon files (shoud be named 0.ico, 1.ico, 2.ico ... 100.ico) to "basktray/resources/ico-2/" folder, and select "Custom" on the right-click menu allows you to modify fonts or styles of your basktray. Enjoy!)
+(Adding icon files (shoud be named 0.ico, 1.ico, 2.ico ... 100.ico) to "basktray/resources/ico-2/" folder, and select "Custom" on the right-click menu allows you to modify fonts or styles of your basktray. Enjoy^^)
 
 # basktray v.1.0
 バッテリー残量をタスクトレイ(システムトレイ)に表示するアプリケーションです。
@@ -28,4 +28,4 @@ Basktray's credit will appear when you double-click the icon!
 
 アイコンをダブルクリックすると、クレジットが表記されます。
 
-((0.ico, 1.ico, 2.ico ... 100.ico) という風に名前付けされたico画像を "basktray/resources/ico-2/" へ追加し、右クリックメニューから"Custom"を選択すると、オリジナルのフォントやスタイルでbasktrayを楽しむことができます。遊んでみてください！)
+((0.ico, 1.ico, 2.ico ... 100.ico) という風に名前付けされたico画像を "basktray/resources/ico-2/" へ追加し、右クリックメニューから"Custom"を選択すると、オリジナルのフォントやスタイルでbasktrayを楽しむことができます。遊んでみてください^^)
