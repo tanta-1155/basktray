@@ -7,7 +7,7 @@ The application shows battery-level of your laptop on your tasktray (system tray
 
 0. Download and unzip "basktray_v1.0.zip"
 1. Run basktray.exe
-2. 2. The icon will appear on your task tray. The icon's number indicates the remaining battery life.
+2. The icon will appear on your task tray. The icon's number indicates the remaining battery life.
 
 If you want to end the program, right-click the icon and choose "Exit" from the right-click menu.
 
