@@ -33,3 +33,5 @@ Basktray's credit will appear when you double-click the icon!
 アイコンをダブルクリックすると、クレジットが表記されます。
 
 ((0.ico, 1.ico, 2.ico ... 100.ico) という風に名前付けされたico画像を "basktray/resources/ico-2/" へ追加し、右クリックメニューから"Custom"を選択すると、オリジナルのフォントやスタイルでbasktrayを楽しむことができます。遊んでみてください^^)
+
+Copyright © 2024 tanta_1155
