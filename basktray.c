@@ -119,7 +119,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
                 case WM_LBUTTONDBLCLK:
                     // Left CLK (DouBle)
-                    switch(MessageBox(hwnd, "basktray v1.0  THX for using(^^)\n\nLicense is written to the \"License\" file\n\nCopyright (c) 2024 KKT", "basktray.exe", MB_OK | MB_SYSTEMMODAL)){
+                    switch(MessageBox(hwnd, "basktray v1.0  THX for using(^^)\n\nLicense is written to the \"License\" file\n\nCopyright (c) 2024 tanta_1155", "basktray.exe", MB_OK | MB_SYSTEMMODAL)){
                         //popup wnd (system modal)
                         case IDOK:
                             //do nothing
