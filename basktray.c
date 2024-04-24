@@ -43,21 +43,6 @@ typedef struct battery_status{
 
 }BS;
 
-void mnset(){
-
-    hMenu = CreatePopupMenu();// get handle of menu
-        if(fdkmd==1){
-            AppendMenu(hMenu, MF_STRING | MF_CHECKED, IDM_MODE, TEXT("DarkMode"));
-        }else{
-            AppendMenu(hMenu, MF_STRING | MF_UNCHECKED, IDM_MODE, TEXT("DarkMode"));
-        }
-        AppendMenu(hMenu, MF_STRING, IDM_CSTM, TEXT("Custom"));
-        AppendMenu(hMenu, MF_STRING, IDM_EXIT, TEXT("Exit"));
-
-        SetMenu(hwnd,hMenu);
-
-}
-
 void get_sps(BS *bs, SYSTEM_POWER_STATUS sps) {
 
     GetSystemPowerStatus(&sps);
@@ -97,7 +82,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             Shell_NotifyIcon(NIM_SETVERSION, &nid);
 
             // Create the right click menu
-            mnset();
+            hMenu = CreatePopupMenu();// get handle of menu
+            if(fdkmd==1){
+                AppendMenu(hMenu, MF_STRING | MF_CHECKED, IDM_MODE, TEXT("DarkMode"));
+            }else{
+                AppendMenu(hMenu, MF_STRING | MF_UNCHECKED, IDM_MODE, TEXT("DarkMode"));
+            }
+            AppendMenu(hMenu, MF_STRING, IDM_CSTM, TEXT("Custom"));
+            AppendMenu(hMenu, MF_STRING, IDM_EXIT, TEXT("Exit"));
+    
+            SetMenu(hwnd,hMenu);
 
             SetTimer(hwnd, TIMER_ID, TIMER_INTERVAL, NULL);
 
