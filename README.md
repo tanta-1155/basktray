@@ -6,7 +6,8 @@
 || つかいかた ||
 
 0. "basktray_v1.0.zip"をダウンロードし、インストールします。
-1. basktray.exe を実行します。(不明な発行元と表示された際は、詳細情報 → 実行を押してください)
+1. basktray.exe を実行します。(WindowsによってPCが保護されましたと表示された際は、詳細情報 → 実行を押してください)
+
 2. バッテリー残量を表すアイコンがタスクトレイに現われます。アイコンの数字が残量のパーセンテージです。
 
 終了する場合は、アイコンを右クリックしてメニューを表示し、"Exit"を選んでください。
@@ -27,7 +28,7 @@ The application shows battery-level of your laptop on your tasktray (system tray
 || How to use ||
 
 0. Download and unzip "basktray_v1.0.zip"
-1. Run basktray.exe
+1. Run basktray.exe (If you see "Windows protected your PC", select "More info"→"Run anyway")
 2. The icon will appear on your task tray. The icon's number indicates the remaining battery life.
 
 If you want to end the program, right-click the icon and choose "Exit" from the right-click menu.
