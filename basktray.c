@@ -1,5 +1,5 @@
+//basktray v2.0 tanta_1155
 #include <windows.h>
-#include <winuser.h>
 #include <shellapi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,10 +16,22 @@
 
 #define WM_MYMESSAGE (WM_USER + 1)
 
-HICON hIcon;
+int fdkmd, cnt=0;
+char sztip[LIM], str[LIM], deb[LIM];
+
+
+WNDCLASSEX wc;
+MSG msg;
+
 NOTIFYICONDATA nid;
-int fdkmd;
-char sztip[LIM], str[LIM];
+POINT pos;
+
+HWND hwnd;
+HICON hIcon;
+HMENU hMenu;
+HMENU OldhMenu;
+
+SYSTEM_POWER_STATUS sps;
 
 typedef struct battery_status{
 
@@ -30,6 +42,21 @@ typedef struct battery_status{
     int AC;
 
 }BS;
+
+void mnset(){
+
+    hMenu = CreatePopupMenu();// get handle of menu
+        if(fdkmd==1){
+            AppendMenu(hMenu, MF_STRING | MF_CHECKED, IDM_MODE, TEXT("DarkMode"));
+        }else{
+            AppendMenu(hMenu, MF_STRING | MF_UNCHECKED, IDM_MODE, TEXT("DarkMode"));
+        }
+        AppendMenu(hMenu, MF_STRING, IDM_CSTM, TEXT("Custom"));
+        AppendMenu(hMenu, MF_STRING, IDM_EXIT, TEXT("Exit"));
+
+        SetMenu(hwnd,hMenu);
+
+}
 
 void get_sps(BS *bs, SYSTEM_POWER_STATUS sps) {
 
@@ -43,12 +70,8 @@ void get_sps(BS *bs, SYSTEM_POWER_STATUS sps) {
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    
-    static HMENU hMenu;
-    POINT pos;
-    SYSTEM_POWER_STATUS sps;
     BS bs;
-    
+
     switch(msg) {
 
         case WM_CREATE:
@@ -67,7 +90,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
             strcpy(nid.szTip, "Loading...");
 
-
             // add tasktray icon
             Shell_NotifyIcon(NIM_ADD, &nid);
 
@@ -75,25 +97,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             Shell_NotifyIcon(NIM_SETVERSION, &nid);
 
             // Create the right click menu
-            
-            hMenu = CreatePopupMenu();// get handle of menu
-            if(fdkmd==1){
-                AppendMenu(hMenu, MF_STRING | MF_CHECKED, IDM_MODE, TEXT("DarkMode"));
-            }else{
-                AppendMenu(hMenu, MF_STRING | MF_UNCHECKED, IDM_MODE, TEXT("DarkMode"));
-            }
-            AppendMenu(hMenu, MF_STRING, IDM_CSTM, TEXT("Custom"));
-            AppendMenu(hMenu, MF_STRING, IDM_EXIT, TEXT("Exit"));
-            SetMenu(hwnd,hMenu);
+            mnset();
+
             SetTimer(hwnd, TIMER_ID, TIMER_INTERVAL, NULL);
+
             break;
         
         case WM_TIMER:
-            // MessageBox(hwnd, "Timer chk", "Basktray.exe", MB_OK | MB_SYSTEMMODAL);←OK
-            get_sps(&bs,sps);
+
+            get_sps(&bs,sps); //get system power status
             
             sprintf(str, "./resources/ico-%d/%d.ico", fdkmd, bs.lev);
+
+            HICON OldhIcon = nid.hIcon;
             nid.hIcon = LoadImage(NULL, str, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+            if (OldhIcon) {
+                DestroyIcon(OldhIcon);
+            }
             // load icon
 
             if (bs.AC) {
@@ -105,11 +125,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     sprintf(sztip,"Left : %d%%\n%dh %dmin", bs.lev, bs.hour, bs.min, bs.sec);//sprintf:cool!
                 }
             }
+
             strcpy(nid.szTip, sztip);
             // tip text
 
             Shell_NotifyIcon(NIM_MODIFY, &nid);
-            Shell_NotifyIcon(NIM_SETVERSION, &nid);
             // sendmsg
 
             break;
@@ -119,12 +139,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
                 case WM_LBUTTONDBLCLK:
                     // Left CLK (DouBle)
-                    switch(MessageBox(hwnd, "basktray v1.0  THX for using(^^)\n\nLicense is written to the \"License\" file\n\nCopyright (c) 2024 tanta_1155", "basktray.exe", MB_OK | MB_SYSTEMMODAL)){
-                        //popup wnd (system modal)
-                        case IDOK:
-                            //do nothing
-                            break;
-                    }
+                    MessageBox(hwnd, "basktray v2.0  THX for using(^^)\n\nCopyright (c) 2024 tanta_1155", "basktray.exe", MB_OK | MB_SYSTEMMODAL);
+                    //debug
+                    //MessageBox(hwnd, deb, "basktray.exe", MB_OK | MB_SYSTEMMODAL);
                     break;
 
                 case WM_RBUTTONDOWN:
@@ -132,13 +149,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     // Get the cursor position and show right CLK menu
                     GetCursorPos(&pos);
                     ClientToScreen(hwnd, &pos);
+                    SetForegroundWindow(hwnd);//set menu foreground
                     TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, pos.x, pos.y, 0, hwnd, NULL);
-                    SendMessage(hwnd, WM_CANCELMODE, wParam, lParam); //close when CLK out of the menu
-                    break;
-                
-                case WM_LBUTTONDOWN:
-                    // Left CLK
-                    SendMessage(hwnd, WM_CANCELMODE, wParam, lParam); //close when CLK out of the menu
                     break;
             }
             break;
@@ -166,12 +178,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                             "1\0",
                             "./resources/basktray.ini"
                         );
-                        CheckMenuItem(hMenu,IDM_MODE,MF_CHECKED);
+                        CheckMenuItem(hMenu,IDM_MODE,MF_CHECKED);//add chk mark
                     }
                     
-                    CheckMenuItem(hMenu,IDM_CSTM,MF_UNCHECKED);
-                    DrawMenuBar(hwnd);
+                    CheckMenuItem(hMenu,IDM_CSTM,MF_UNCHECKED);//unchk chk mark
                     SetMenu(hwnd,hMenu);
+                    DrawMenuBar(hwnd);
+                    
                     break;
 
                 case IDM_CSTM://101
@@ -198,6 +211,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     CheckMenuItem(hMenu,IDM_MODE,MF_UNCHECKED);
                     SetMenu(hwnd,hMenu);
                     DrawMenuBar(hwnd);
+                    
                     break;
                 
                 case IDM_EXIT:// 102
@@ -213,7 +227,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             Shell_NotifyIcon(NIM_DELETE, &nid);
             // delete icon from tasktray
             DestroyIcon(hIcon);
+            DestroyIcon(OldhIcon);
             DestroyMenu(hMenu);
+            DestroyMenu(OldhMenu);
             DestroyWindow(hwnd);
             //free memory
             PostQuitMessage(0);
@@ -226,9 +242,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     FreeConsole();//undisplay terminal
-    WNDCLASSEX wc;
-    HWND hwnd;
-    MSG msg;
 
     fdkmd = 
     GetPrivateProfileInt(
@@ -258,7 +271,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
-    // create wnd
     hwnd = CreateWindowEx(
         WS_EX_TOOLWINDOW,// don't show on Alt+Tab menu && stealth
         "MyWindowClass",
@@ -271,6 +283,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
         return 0;
     }
+    
+    SetParent(hwnd, GetDesktopWindow());
 
     // show window
     ShowWindow(hwnd, 0);
@@ -281,5 +295,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+
     return msg.wParam;
 }
