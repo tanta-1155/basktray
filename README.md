@@ -1,4 +1,4 @@
-# basktray v.1.0
+# basktray v.2.0
 バッテリー残量をタスクトレイ(システムトレイ)に表示するアプリケーションです。
 
 ![image](https://github.com/tanta-1155/basktray/assets/145323622/39511ed9-4c9e-480d-a133-72bc68dd3cbd)
@@ -21,7 +21,7 @@
 
 (MITライセンスにも記載されていますが、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じた一切の請求、損害、その他の義務について何らの責任も負うことができません。予めご了承ください。)
 
-# basktray v.1.0
+# basktray v.2.0
 The application shows battery-level of your laptop on your tasktray (system tray).
 
 || How to use ||
